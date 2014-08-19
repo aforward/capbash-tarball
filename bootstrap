@@ -1,0 +1,16 @@
+#!/bin/bash
+
+if [[ ! -e ./assets/myapp.tar.gz ]]; then
+  mkdir -p ./assets/myapp
+  echo "HELLO WORLD" > ./assets/myapp/helloworld
+  (cd ./assets && tar zcf myapp.tar.gz ./myapp)
+  rm -rf ./assets/myapp
+fi
+
+mkdir -p ./nodes
+printf "%b" "
+#!/bin/bash
+TARBALL_NAME=myapp TARBALL_FILENAME=./assets/myapp.zip ./submodules/tar/install
+" > ./nodes/tarball
+
+chmod 755 ./nodes/tarball
