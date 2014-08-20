@@ -8,22 +8,35 @@ TARBALL_BASE_DIR=${TARBALL_BASE_DIR-/var/apps}
 TARBALL_NAME=${TARBALL_NAME}
 TARBALL_EXTRACT_NAME=${TARBALL_EXTRACT_NAME-$TARBALL_NAME}
 TARBALL_FILENAME=${TARBALL_FILENAME}
+TARBALL_MODE=${TARBALL_MODE-targz}
 
 TARBALL_APP_DIR=${TARBALL_BASE_DIR}/${TARBALL_NAME}
+TARBALL_FULL_FILENAME=$(pwd)/$TARBALL_FILENAME
 
 #-----------
 # Install Script
 #-----------
 
+if [[ "`which unzip`" == "" ]]; then
+  apt-get install -y unzip
+fi
+
 if [[ -e $TARBALL_APP_DIR ]]; then
-  echo "$TARBALL_NAME already deployed to $TARBALL_BASE_DIR."
+  echo "$TARBALL_NAME already deployed to $TARBALL_APP_DIR."
 else
   echo "Creating $TARBALL_NAME ($TARBALL_BASE_DIR)..."
   mkdir -p $TARBALL_BASE_DIR
-  (cd $TARBALL_BASE_DIR && tar zxf $TARBALL_FILENAME)
 
-  if [[ ! -e $TARBALL_APP_DIR ]]; then
-    mv $TARBALL_BASE_DIR/$TARBALL_EXTRACT_NAME $TARBALL_BASE_DIR/$TARBALL_NAME
+  if [[ "$TARBALL_MODE" == "targz" ]]; then
+    CMD="tar zxf $TARBALL_FULL_FILENAME"
+  elif [[ "$TARBALL_MODE" == "zip" ]]; then
+    CMD="unzip $TARBALL_FULL_FILENAME"
   fi
+  echo "  Extracting $CMD (from $TARBALL_BASE_DIR)"
+  (cd $TARBALL_BASE_DIR && $CMD)
+
+  # if [[ ! -e $TARBALL_APP_DIR ]]; then
+  #   mv $TARBALL_BASE_DIR/$TARBALL_EXTRACT_NAME $TARBALL_BASE_DIR/$TARBALL_NAME
+  # fi
   echo "DONE Creating $TARBALL_NAME ($TARBALL_BASE_DIR)..."
 fi
