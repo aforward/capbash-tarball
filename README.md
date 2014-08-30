@@ -25,7 +25,7 @@ capbash install tarball
 The available configurations include:
 
 ```
-TARBALL_BASE_DIR=${TARBALL_BASE_DIR-/var/apps}
+TARBALL_BASE_DIR=${TARBALL_BASE_DIR-/var/local/apps}
 TARBALL_NAME=${TARBALL_NAME}
 TARBALL_FILENAME=${TARBALL_FILENAME}
 ```
